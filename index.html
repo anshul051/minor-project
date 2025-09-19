@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hydro-AI | Predictive Plant Care</title>
+    
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js for data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Google Fonts for a modern look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS within the HTML file -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0B1120; /* Deep navy blue background */
+            color: #E0E0E0;
+        }
+        .glass-card {
+            background: rgba(20, 28, 48, 0.6); /* Darker glass effect */
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        .hero-bg {
+            background-image: linear-gradient(to top, #0B1120, rgba(11, 17, 32, 0.7)), url('https://images.unsplash.com/photo-1592205834543-3b6811e5a526?q=80&w=1920&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+        }
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+        .status-monitoring { background-color: #10b981; } /* emerald-500 */
+        .status-watering { background-color: #3b82f6; animation: none; } /* blue-500 */
+        .status-critical { background-color: #ef4444; animation: pulse-red 1s infinite; } /* red-500 */
+        @keyframes pulse-red {
+             0% { opacity: 1; }
+             50% { opacity: 0.5; }
+             100% { opacity: 1; }
+        }
+        .btn-primary {
+            background-color: rgba(16, 185, 129, 0.8);
+            border: 1px solid rgb(16, 185, 129);
+            backdrop-filter: blur(5px);
+        }
+        .btn-primary:hover {
+            background-color: rgb(16, 185, 129);
+            box-shadow: 0 0 25px rgba(16, 185, 129, 0.7);
+            transform: translateY(-2px);
+        }
+        .text-gradient {
+            background: linear-gradient(to right, #34d399, #6ee7b7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        /* Scroll Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="text-gray-200">
+
+    <!-- Header Navigation -->
+    <header class="bg-gray-900/50 backdrop-blur-md fixed top-0 left-0 right-0 z-50 shadow-lg">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-2xl font-black text-emerald-400">
+                Hydro<span class="text-emerald-300">-AI</span>
+            </div>
+            <nav class="hidden md:flex space-x-8 items-center">
+                <a href="#hero" class="text-gray-300 hover:text-emerald-400 transition-colors">Home</a>
+                <a href="#dashboard" class="text-gray-300 hover:text-emerald-400 transition-colors">Dashboard</a>
+                <a href="#features" class="text-gray-300 hover:text-emerald-400 transition-colors">Features</a>
+                <a href="#about" class="text-gray-300 hover:text-emerald-400 transition-colors">About</a>
+            </nav>
+            <a href="#dashboard" class="btn-primary hidden md:inline-block text-white font-bold py-2 px-6 rounded-lg shadow-lg transition-all duration-300 ease-in-out">Live Data</a>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="hero" class="hero-bg min-h-screen flex items-center justify-center pt-20">
+            <div class="text-center text-white p-6 reveal">
+                <h1 class="text-5xl md:text-7xl font-black mb-4 leading-tight">Proactive Plant Care, <br/><span class="text-gradient">Powered by AI.</span></h1>
+                <p class="text-lg md:text-xl text-gray-300 mb-8 max-w-2xl mx-auto">Hydro-AI doesn't just water your plants—it predicts their thirst, ensuring optimal health and water efficiency.</p>
+                <a href="#dashboard" class="btn-primary text-xl group inline-flex items-center text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-all duration-300 ease-in-out">
+                    <span>View Live Dashboard</span>
+                    <svg class="w-5 h-5 ml-3 transform transition-transform duration-300 group-hover:translate-x-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                </a>
+            </div>
+        </section>
+
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="py-24">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16 reveal">
+                    <h2 class="text-4xl font-bold mb-2">Live System Dashboard</h2>
+                    <p class="text-gray-400">Real-time data from the smart irrigation system.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Soil Moisture Card -->
+                    <div class="glass-card p-6 rounded-2xl shadow-lg text-center reveal">
+                        <h3 class="text-lg font-semibold text-gray-400 mb-2">Current Soil Moisture</h3>
+                        <p id="moisture-level" class="text-6xl font-bold text-emerald-400 transition-colors duration-500">--%</p>
+                        <p class="text-sm text-gray-500 mt-2">Last Updated: <span id="last-updated">...</span></p>
+                    </div>
+
+                    <!-- System Status Card -->
+                    <div class="glass-card p-6 rounded-2xl shadow-lg text-center reveal" style="transition-delay: 0.2s;">
+                        <h3 class="text-lg font-semibold text-gray-400 mb-4">System Status</h3>
+                        <div class="flex items-center justify-center mb-4">
+                            <span id="status-dot" class="status-dot status-monitoring"></span>
+                            <p id="system-status" class="text-3xl font-bold text-gray-100">Monitoring</p>
+                        </div>
+                        <button id="manual-water-btn" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:bg-blue-700 transition-all duration-300">
+                            Manual Water
+                        </button>
+                    </div>
+
+                    <!-- AI Prediction Card -->
+                     <div class="glass-card p-6 rounded-2xl shadow-lg text-center reveal" style="transition-delay: 0.4s;">
+                        <h3 class="text-lg font-semibold text-gray-400 mb-2">AI Prediction</h3>
+                        <p id="prediction-text" class="text-2xl font-bold text-gray-100 min-h-[64px] flex items-center justify-center">Levels Optimal</p>
+                        <p class="text-sm text-gray-500 mt-2">Next check in: <span id="next-check">60 mins</span></p>
+                    </div>
+                </div>
+
+                <!-- Chart Container -->
+                <div class="mt-8 glass-card p-6 rounded-2xl shadow-lg reveal">
+                    <h3 class="text-xl font-semibold text-center mb-4">Moisture Levels (Last 12 Hours)</h3>
+                    <div class="h-96">
+                        <canvas id="moisture-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Custom Modal for Notifications -->
+        <div id="notification-modal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 hidden">
+            <div class="glass-card rounded-lg p-8 shadow-2xl text-center max-w-sm mx-auto border-emerald-500">
+                <p id="notification-message" class="text-lg mb-6 text-white">Message here</p>
+                <button id="close-modal-btn" class="btn-primary text-white font-bold py-2 px-6 rounded-lg shadow-lg transition-all duration-300 ease-in-out">OK</button>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <section id="features" class="py-24 bg-black bg-opacity-20">
+            <div class="container mx-auto px-6">
+                 <div class="text-center mb-16 reveal">
+                    <h2 class="text-4xl font-bold mb-2">The <span class="text-gradient">Sense-Predict-Act</span> Model</h2>
+                    <p class="text-gray-400">A simple yet powerful approach to intelligent automation.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
+                    <div class="p-8 reveal">
+                        <div class="flex justify-center mb-4">
+                            <svg class="w-16 h-16 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path></svg>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3">1. Sense & Connect</h3>
+                        <p class="text-gray-400">A capacitive soil sensor continuously gathers moisture data. The ESP32 microcontroller then transmits this information to the cloud in real-time.</p>
+                    </div>
+                    <div class="p-8 reveal" style="transition-delay: 0.2s;">
+                         <div class="flex justify-center mb-4">
+                            <svg class="w-16 h-16 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3">2. Predict & Analyze</h3>
+                        <p class="text-gray-400">Our Python-based machine learning model analyzes historical data patterns to forecast the soil's moisture level for the next 24 hours.</p>
+                    </div>
+                     <div class="p-8 reveal" style="transition-delay: 0.4s;">
+                        <div class="flex justify-center mb-4">
+                           <svg class="w-16 h-16 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3">3. Act & Automate</h3>
+                        <p class="text-gray-400">If the AI predicts moisture will drop below a critical threshold, it proactively sends a command via MQTT to activate the pump, ensuring the plant is watered just in time.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="py-24">
+             <div class="container mx-auto px-6 max-w-4xl text-center reveal">
+                 <h2 class="text-4xl font-bold mb-4">About This Project</h2>
+                 <p class="text-lg text-gray-300 leading-relaxed">
+                    This project was born from a desire to create a smarter, more efficient solution for plant care. It moves beyond simple timers and reactive sensors by leveraging the power of predictive analytics. By building a low-cost IoT device combined with a time-series forecasting model, Hydro-AI offers a glimpse into the future of automated, data-driven horticulture. It's not just about convenience; it's about water conservation and creating the perfect environment for plants to thrive.
+                 </p>
+             </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-10">
+        <div class="container mx-auto px-6 text-center text-gray-400">
+            <p class="mb-2">Project made by ANSHUL | SHIVAM | SRIRUP</p>
+            <p>&copy; 2025 Hydro-AI Project. A fusion of IoT and Machine Learning.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- Scroll Reveal Animations ---
+            const revealElements = document.querySelectorAll('.reveal');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            revealElements.forEach(el => observer.observe(el));
+
+            // --- Chart.js Setup ---
+            const ctx = document.getElementById('moisture-chart').getContext('2d');
+            const initialLabels = Array.from({ length: 12 }, (_, i) => `${i + 1}h ago`).reverse();
+            const initialData = Array.from({ length: 12 }, () => Math.floor(Math.random() * 15) + 60);
+
+            const moistureChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: initialLabels,
+                    datasets: [{
+                        label: 'Soil Moisture (%)',
+                        data: initialData,
+                        backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                        borderColor: '#10b981',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#10b981',
+                        pointRadius: 0,
+                        pointHoverRadius: 7,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            suggestedMin: 30,
+                            suggestedMax: 100,
+                            ticks: { color: '#9ca3af' },
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                        },
+                        x: {
+                            ticks: { color: '#9ca3af' },
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+
+            // --- UI Elements ---
+            const moistureLevelEl = document.getElementById('moisture-level');
+            const lastUpdatedEl = document.getElementById('last-updated');
+            const systemStatusEl = document.getElementById('system-status');
+            const statusDotEl = document.getElementById('status-dot');
+            const predictionTextEl = document.getElementById('prediction-text');
+            const manualWaterBtn = document.getElementById('manual-water-btn');
+            
+            // --- Modal Elements ---
+            const modal = document.getElementById('notification-modal');
+            const modalMessage = document.getElementById('notification-message');
+            const closeModalBtn = document.getElementById('close-modal-btn');
+
+            let currentMoisture = 75;
+            
+            // --- Modal Logic ---
+            function showNotification(message) {
+                modalMessage.textContent = message;
+                modal.classList.remove('hidden');
+            }
+            
+            closeModalBtn.addEventListener('click', () => {
+                modal.classList.add('hidden');
+            });
+
+            // --- Data Simulation Logic ---
+            function updateDashboard() {
+                currentMoisture -= Math.random() * 0.5;
+                if (currentMoisture < 30) currentMoisture = 30;
+                
+                const roundedMoisture = Math.round(currentMoisture);
+                moistureLevelEl.textContent = `${roundedMoisture}%`;
+                lastUpdatedEl.textContent = new Date().toLocaleTimeString();
+                
+                // Dynamically change moisture color
+                if(roundedMoisture > 60) moistureLevelEl.className = 'text-6xl font-bold text-emerald-400 transition-colors duration-500';
+                else if (roundedMoisture > 35) moistureLevelEl.className = 'text-6xl font-bold text-yellow-400 transition-colors duration-500';
+                else moistureLevelEl.className = 'text-6xl font-bold text-red-500 transition-colors duration-500';
+
+                // Update chart
+                moistureChart.data.labels.shift();
+                moistureChart.data.datasets[0].data.shift();
+                moistureChart.data.labels.push(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+                moistureChart.data.datasets[0].data.push(currentMoisture);
+                moistureChart.update('quiet');
+
+                updateSystemStatus(currentMoisture);
+            }
+            
+            function updateSystemStatus(moisture) {
+                 if (systemStatusEl.textContent === 'Watering') return;
+                 statusDotEl.className = 'status-dot'; 
+                 if (moisture < 35) {
+                    systemStatusEl.textContent = 'Critical';
+                    statusDotEl.classList.add('status-critical');
+                    predictionTextEl.textContent = 'Watering Recommended';
+                 } else {
+                    systemStatusEl.textContent = 'Monitoring';
+                    statusDotEl.classList.add('status-monitoring');
+                    
+                    // AI Prediction thinking effect
+                    predictionTextEl.textContent = 'Analyzing...';
+                    setTimeout(() => {
+                         predictionTextEl.textContent = 'Levels Optimal';
+                    }, 1500);
+                 }
+            }
+            
+            // --- Manual Watering Logic ---
+            manualWaterBtn.addEventListener('click', () => {
+                showNotification('Manual watering initiated. The pump will run for 15 seconds.');
+                systemStatusEl.textContent = 'Watering';
+                statusDotEl.className = 'status-dot status-watering';
+                manualWaterBtn.disabled = true;
+                manualWaterBtn.textContent = 'Watering...';
+                
+                let waterIncrease = (90 - currentMoisture) / 5;
+
+                let waterInterval = setInterval(() => {
+                    currentMoisture += waterIncrease;
+                    if (currentMoisture > 90) currentMoisture = 90;
+                    moistureLevelEl.textContent = `${Math.round(currentMoisture)}%`;
+                }, 1000);
+
+                setTimeout(() => {
+                    clearInterval(waterInterval);
+                    manualWaterBtn.disabled = false;
+                    manualWaterBtn.textContent = 'Manual Water';
+                    updateSystemStatus(currentMoisture);
+                }, 5000);
+            });
+
+            setInterval(updateDashboard, 3000);
+            updateDashboard();
+        });
+    </script>
+</body>
+</html>
+
